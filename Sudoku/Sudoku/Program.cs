@@ -8,45 +8,13 @@
  |_____/ \__,_|\__,_|\___/|_|\_\\__,_|
                                       
                                       
-Sudoku - Generace levelu
+Sudoku - Generace levelu - DONE
          Obtiznosti
          Korekce (kontrola spravnosti)
          ----------------------------------
-         Pridat GUI (HODNE S REZERVOU skrze WINForms)
+         Pridat GUI (HODNE S REZERVOU skrze WPF)
 
-
-
-
-
-
-
-Hraci pole:
-
-X
-|  1 2 3 |1 2 3 |1 2 3 
-|  4 5 6 |4 5 6 |4 5 6 
-|  7 8 9 |7 8 9 |7 8 9 
-|  ------+------+------
-|  1 2 3 |1 2 3 |1 2 3 
-|  4 5 6 |4 5 6 |4 5 6 
-|  7 8 9 |7 8 9 |7 8 9 
-|  ------+------+------
-|  1 2 3 |1 2 3 |1 2 3 
-|  4 5 6 |4 5 6 |4 5 6 
-|  7 8 9 |7 8 9 |7 8 9  
-
-  ----------------------> Y
 */
-
-
-
-
-
-
-
-
-
-
 
 using System;
 using System.Collections.Generic;
@@ -83,41 +51,33 @@ namespace Sudoku
                 }
             } 
 
-
-            List<int> CislaPrvnihoSloupce = new List<int>();
-
-            for (int i = 0; i < 9; i++)
+            for (int p = 0; p < 9; p++)
             {
-                if (CislaPrvnihoSloupce.Contains(PaternProRadek[0]))
+
+                int Radek = 0;
+                for (int i = 0; i < 3; i++)
                 {
-                    int n = PaternProRadek.Count;
-                    int k = 3;
-
-                    // Obrácení tří částí
-                    PaternProRadek.Reverse(0, n - k);
-                    PaternProRadek.Reverse(n - k, k);
-                    PaternProRadek.Reverse(0, n);
-
-                    i--;
-                }
-                else
-                {
-                    CislaPrvnihoSloupce.Add(PaternProRadek[0]);
-
-                    for (int j = 0; j < 9; j++)
+                    for (int j = 0; j < 3; j++)
                     {
-                        HraciPole[i, j] = PaternProRadek[j];
+                        int PocetPrvku = PaternProRadek.Count;
+                        int Shift = 3;
+
+                        // Obrácení tří částí
+                        PaternProRadek.Reverse(0, PocetPrvku - Shift);
+                        PaternProRadek.Reverse(PocetPrvku - Shift, Shift);
+                        PaternProRadek.Reverse(0, PocetPrvku);
+
+
+
+                        for (int m = 0; m < 9; m++)
+                        {
+                            HraciPole[Radek, (m + i ) % 9] = PaternProRadek[m];
+                        }
+                        Radek++;
+
+
                     }
-
-                    int n = PaternProRadek.Count;
-                    int k = 3;
-
-                    // Obrácení tří částí
-                    PaternProRadek.Reverse(0, n - k);
-                    PaternProRadek.Reverse(n - k, k);
-                    PaternProRadek.Reverse(0, n);
                 }
-                
 
             }
 
