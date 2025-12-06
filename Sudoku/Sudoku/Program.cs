@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    _____           _       _          
   / ____|         | |     | |         
@@ -52,6 +52,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,22 +63,69 @@ namespace Sudoku
     internal class Program
     {
 
-        static void PrirazeniHodnotPoli(char[,] HraciPole)
+        static void GeneraceZakladnihoPaternu(int[,] HraciPole)
         {
-
-            for (int i = 0; i < HraciPole.GetLength(0); i++)
+            Random random = new Random();
+            
+            List<int> PaternProRadek = new List<int>();
+            //Generace paternu pro kazdy radek 
+            for (int i = 0; i < 9; i++)
             {
-                for(int j = 0; j < HraciPole.GetLength(0); j++)
+                int Cislo = random.Next(1,10);
+
+                if (!PaternProRadek.Contains(Cislo))
                 {
-                    HraciPole[i, j] = 'X';
+                    PaternProRadek.Add(Cislo);
                 }
+                else
+                {
+                    i--;
+                }
+            } 
+
+
+            List<int> CislaPrvnihoSloupce = new List<int>();
+
+            for (int i = 0; i < 9; i++)
+            {
+                if (CislaPrvnihoSloupce.Contains(PaternProRadek[0]))
+                {
+                    int n = PaternProRadek.Count;
+                    int k = 3;
+
+                    // Obrácení tří částí
+                    PaternProRadek.Reverse(0, n - k);
+                    PaternProRadek.Reverse(n - k, k);
+                    PaternProRadek.Reverse(0, n);
+
+                    i--;
+                }
+                else
+                {
+                    CislaPrvnihoSloupce.Add(PaternProRadek[0]);
+
+                    for (int j = 0; j < 9; j++)
+                    {
+                        HraciPole[i, j] = PaternProRadek[j];
+                    }
+
+                    int n = PaternProRadek.Count;
+                    int k = 3;
+
+                    // Obrácení tří částí
+                    PaternProRadek.Reverse(0, n - k);
+                    PaternProRadek.Reverse(n - k, k);
+                    PaternProRadek.Reverse(0, n);
+                }
+                
 
             }
 
-
         }
 
-        static void VypisPole(char[,] HraciPole)
+
+
+        static void VypisPole(int[,] HraciPole)
         {
             for (int i = 0; i < 9; i++)
             {
@@ -95,137 +143,13 @@ namespace Sudoku
             }
         }
 
-        static void GeneraceProstrednihoSektoru(char[,] HraciPole)
-        {
-            Random rnd = new Random();
-            int CisloVPoradi = 1;
-            
-
-            for (int y = 3; y < 6; y++)
-            {
-                for (int x = 3; x < 6; x++)
-                {
-                    int RandomX = rnd.Next(3, 6 );
-                    int RandomY = rnd.Next(3, 6);
-
-
-                    if (HraciPole[RandomX, RandomY] == 'X')
-                    {
-                        HraciPole[RandomX, RandomY] = Convert.ToChar('0' + CisloVPoradi);
-                        CisloVPoradi++;
-                    }
-                    else
-                    {
-                        x--;
-                        continue;
-                    }
-                    
-
-                }
-            }
-
-
-
-
-        }
-
-        static void GeneraceOstatnichCisel(char[,] HraciPole)
-        {
-
-            
-
-            for (int y = 0; y < 9; y++)
-            {
-                List<int> dostupnaCisla = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
-                // Tento for cyklus se postara o nalezeni vsech jiz predem nastavenych cisel aby se v 1 slopci neopakovali vicekrat
-                for (int x = 0; x < 9; x++)
-                {
-                    if (HraciPole[x,y] != 'X')
-                    {
-                       dostupnaCisla.Remove(HraciPole[x,y]);
-                    }
-
-
-
-                }
-
-                // Tento for cyklus uz prirazuje zbyla cisla do jedno slupce
-                for(int x  = 0; x < 9; x++)
-                {
-                    Random rnd = new Random();
-                    int NahodneCislo = rnd.Next(1, 10);
-
-                    if (dostupnaCisla.Contains(NahodneCislo))
-                    {
-                        HraciPole[x, y] = Convert.ToChar('0' + NahodneCislo);
-                        dostupnaCisla.Remove(NahodneCislo);
-
-                    }
-                    else
-                    {
-                        x--;
-                        continue;
-
-                    }
-
-                }
-
-            } 
-
-
-
-
-
-        }
-
-        static bool ValidaceHernihoPole(char[,] HraciPole)
-        {
-            for(int x = 0;x < 9; x++)
-            {
-                List<int> dostupnaCisla = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
-                for (int y = 0;y < 9; y++)
-                {
-                    if (dostupnaCisla.Contains(HraciPole[x, y]))
-                    {
-                        dostupnaCisla.Remove(HraciPole[x, y]);
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-
-                    
-                }
-
-            }
-            
-           
-            return true;
-
-        } 
-
         static void Main(string[] args)
         {
-            char[,] HraciPole = new char[9, 9];
-            int pokusy = 0;
+            int[,] HraciPole = new int[9, 9];
 
 
-            do
-            {
-                PrirazeniHodnotPoli(HraciPole);
-                GeneraceProstrednihoSektoru(HraciPole);
-                GeneraceOstatnichCisel(HraciPole);
-                VypisPole(HraciPole);
-                pokusy++;
-
-            } while(!ValidaceHernihoPole(HraciPole));
-            
-            Console.Clear();
+            GeneraceZakladnihoPaternu(HraciPole);
             VypisPole(HraciPole);
-            Console.WriteLine($"\n\n\nHraci plocha byla uspesne vygenerovana po: {pokusy} pokusech");
         }
     }
 }
