@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sudoku
@@ -118,26 +119,52 @@ namespace Sudoku
 
                 if (VertikalneNeboHorizontalne == 1) // Michani bude Vertikalni
                 {
+                    int[] PoradiPuvodni = new int[3] { 0, 1, 2 };
+                    int[] PoradiNove = new int[3];
+                    Random r = new Random();
+
+                    for (int m = 0; m < 3; m++)
+                    {
+                        int Cislo = r.Next(0, 3);
+                        if (PoradiNove.Contains(Cislo))
+                        {
+                            PoradiNove[m] = Cislo;
+                        }
+                        else
+                        {
+                            m--;
+
+                        }
+
+
+                    }
+
+
                     int[,] PoleProMichaniSloupcu = new int [3,9];
 
                     for (int j = 0;j < 3; j++)
                     {
                         for (int k = 0;k < 9; k++)
                         {
-                            int[] Poradi = new int[3] {1,2,3};
-                            
-                            for (int m = 0; m < 3; m++)
-                            {
-                                Random r = new Random();
-                                int Pozice = r.Next(0,3);
-                                
-                            }
 
-                            
-                            PoleProMichaniSloupcu[SekceKMichani * 3 + j, k] = HraciPole[SekceKMichani + j, k];
+                            PoleProMichaniSloupcu[j, SekceKMichani * 3 + j] = HraciPole[PoradiNove[j], SekceKMichani * 3 + j];
+
                         }
                     }
 
+                    for (int j = 0; j < 3; j++)
+                    {
+                        for(int k = 0; k < 9; k++)
+                        {
+                            HraciPole[SekceKMichani * 3 + j, k] = PoleProMichaniSloupcu[j, SekceKMichani * 3 + j];
+
+                        }
+
+                    }
+
+                    //VypisPole(HraciPole);
+                    // Thread.Sleep(1000);
+                    
 
                 }
                 else //Michani bude horizontalni
@@ -161,6 +188,9 @@ namespace Sudoku
 
 
             GeneraceZakladnihoPaternu(HraciPole);
+            VypisPole(HraciPole);
+            Console.WriteLine("\n\n\n\n");
+            ZamichejPole(HraciPole);
             VypisPole(HraciPole);
         }
     }
