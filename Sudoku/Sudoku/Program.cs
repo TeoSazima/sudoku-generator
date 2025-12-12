@@ -103,6 +103,48 @@ namespace Sudoku
             }
         }
 
+        static void ZamichejPole(int[,] HraciPole)
+        {
+            Random random = new Random();
+
+            int PocetMichani = random.Next(20, 50);
+
+
+            for (int i = 0; i < PocetMichani; i++)
+            {
+
+                int VertikalneNeboHorizontalne = random.Next(0, 2);
+                int SekceKMichani = random.Next(0, 3);
+
+                if (VertikalneNeboHorizontalne == 1) // Michani bude Vertikalni
+                {
+                    int[,] PoleProMichaniSloupcu = new int [3,9];
+
+                    for (int j = 0;j < 3; j++)
+                    {
+                        for (int k = 0;k < 9; k++)
+                        {
+                            PoleProMichaniSloupcu[SekceKMichani + j, k] = HraciPole[SekceKMichani + j, k];
+                        }
+                    }
+
+
+                }
+                else //Michani bude horizontalni
+                {
+
+
+
+                }
+
+            }
+            
+
+
+
+
+        }
+
         static void Main(string[] args)
         {
             int[,] HraciPole = new int[9, 9];
