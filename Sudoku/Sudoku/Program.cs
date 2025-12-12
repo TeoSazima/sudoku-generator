@@ -124,7 +124,17 @@ namespace Sudoku
                     {
                         for (int k = 0;k < 9; k++)
                         {
-                            PoleProMichaniSloupcu[SekceKMichani + j, k] = HraciPole[SekceKMichani + j, k];
+                            int[] Poradi = new int[3] {1,2,3};
+                            
+                            for (int m = 0; m < 3; m++)
+                            {
+                                Random r = new Random();
+                                int Pozice = r.Next(0,3);
+                                
+                            }
+
+                            
+                            PoleProMichaniSloupcu[SekceKMichani * 3 + j, k] = HraciPole[SekceKMichani + j, k];
                         }
                     }
 
